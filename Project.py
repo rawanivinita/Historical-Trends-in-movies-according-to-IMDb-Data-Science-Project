@@ -6,47 +6,86 @@ import numpy as np
 
 df_movie = pd.read_csv("IMDB-Movie-Data.csv")
 
-#we found that Revenue and MetaScore are the only columns with missing entries,so we removed rows with the missing values
+# we found that Revenue and MetaScore are the only columns with missing entries,so we removed rows with the missing values
 
 df_movie = df_movie.dropna(axis=0, how='any')
 df_movie.info()
 
-#
 
-#Scatter Plot between Year and Revenue
-plt.scatter( df_movie['Year'],df_movie['Revenue (Millions)'])
+# Scatter Plot between Year and Revenue
+plt.scatter(df_movie['Year'], df_movie['Revenue (Millions)'])
 plt.title('Revenue (Millions) vs Year')
 plt.xlabel('Year')
 plt.ylabel('Revenue (Millions)')
+
+# line of best fit (Year Vs Revenue)
+year_column = df_movie['Year']
+revenue_column = df_movie['Revenue (Millions)']
+p = np.polyfit(year_column, revenue_column, 1)
+y_fit = p[0] * year_column + p[1]
+plt.plot(year_column, y_fit, color='red')
+
 plt.show()
 
-#Scatter Plot between Runtime and Revenue
-plt.scatter( df_movie['Runtime (Minutes)'],df_movie['Revenue (Millions)'])
+
+
+# Scatter Plot between Runtime and Revenue
+plt.scatter(df_movie['Runtime (Minutes)'], df_movie['Revenue (Millions)'])
 plt.title('Revenue (Millions) vs Runtime (Minutes)')
 plt.xlabel('Runtime (Minutes)')
 plt.ylabel('Revenue (Millions)')
+
+# line of best fit (Runtime Vs Revenue)
+runtime_column = df_movie['Runtime (Minutes)']
+p = np.polyfit(runtime_column, revenue_column, 1)
+y_fit = p[0] * runtime_column + p[1]
+plt.plot(runtime_column, y_fit, color='red')
+
 plt.show()
 
 
-#Scatter Plot between Year and Rating
-plt.scatter( df_movie['Year'],df_movie['Rating'])
+
+# Scatter Plot between Year and Rating
+plt.scatter(df_movie['Year'], df_movie['Rating'])
 plt.title('Rating vs Year')
 plt.xlabel('Year')
 plt.ylabel('Rating')
+
+# line of best fit (Year Vs Rating)
+rating_column = df_movie['Rating']
+p = np.polyfit(year_column, rating_column, 1)
+y_fit = p[0] * year_column + p[1]
+plt.plot(year_column, y_fit, color='red')
+
 plt.show()
 
-#Scatter Plot between Runtime and Rating
-plt.scatter( df_movie['Runtime (Minutes)'],df_movie['Rating'])
+
+
+# Scatter Plot between Runtime and Rating
+plt.scatter(df_movie['Runtime (Minutes)'], df_movie['Rating'])
 plt.title('Runtime (Minutes) vs Rating')
 plt.xlabel('Runtime (Minutes)')
 plt.ylabel('Rating')
+
+# line of best fit (Runtime Vs Rating)
+p = np.polyfit(runtime_column, rating_column, 1)
+y_fit = p[0] * runtime_column + p[1]
+plt.plot(runtime_column, y_fit, color='red')
+
 plt.show()
 
-#Scatter Plot between Revenue and Rating
-plt.scatter( df_movie['Rating'],df_movie['Revenue (Millions)'])
+
+# Scatter Plot between Revenue and Rating
+plt.scatter(df_movie['Rating'], df_movie['Revenue (Millions)'])
 plt.title('Revenue (Millions) vs Rating')
 plt.xlabel('Rating')
 plt.ylabel('Revenue (Millions)')
+
+# line of best fit (Revenue Vs Rating)
+p = np.polyfit(rating_column, revenue_column, 1)
+y_fit = p[0] * rating_column + p[1]
+plt.plot(rating_column, y_fit, color='red')
+
 plt.show()
 
 
