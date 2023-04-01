@@ -9,7 +9,7 @@ df_movie = pd.read_csv("IMDB-Movie-Data.csv")
 # we found that Revenue and MetaScore are the only columns with missing entries,so we removed rows with the missing values
 
 df_movie = df_movie.dropna(axis=0, how='any')
-df_movie.info()
+#df_movie.info()
 
 
 # Scatter Plot between Year and Revenue
@@ -25,7 +25,7 @@ p = np.polyfit(year_column, revenue_column, 1)
 y_fit = p[0] * year_column + p[1]
 plt.plot(year_column, y_fit, color='red')
 
-plt.show()
+#plt.show()
 
 
 
@@ -41,7 +41,7 @@ p = np.polyfit(runtime_column, revenue_column, 1)
 y_fit = p[0] * runtime_column + p[1]
 plt.plot(runtime_column, y_fit, color='red')
 
-plt.show()
+#plt.show()
 
 
 
@@ -57,7 +57,7 @@ p = np.polyfit(year_column, rating_column, 1)
 y_fit = p[0] * year_column + p[1]
 plt.plot(year_column, y_fit, color='red')
 
-plt.show()
+#plt.show()
 
 
 
@@ -72,7 +72,7 @@ p = np.polyfit(runtime_column, rating_column, 1)
 y_fit = p[0] * runtime_column + p[1]
 plt.plot(runtime_column, y_fit, color='red')
 
-plt.show()
+#plt.show()
 
 
 # Scatter Plot between Revenue and Rating
@@ -86,7 +86,7 @@ p = np.polyfit(rating_column, revenue_column, 1)
 y_fit = p[0] * rating_column + p[1]
 plt.plot(rating_column, y_fit, color='red')
 
-plt.show()
+#plt.show()
 
 
 # print the correlation
@@ -101,3 +101,17 @@ print("Correlation between Runtime and Rating is: ", round(corr_rev_run, 2))
 
 corr_rev_run = df_movie['Year'].corr(df_movie['Rating'])
 print("Correlation between Year and Rating is: ", round(corr_rev_run, 2))
+
+
+
+# transfer the genre column entries which are list of strings into list of lists of strings
+
+df_movie['Genre'] = df_movie['Genre'].apply(lambda x : x.split(','))
+
+print(df_movie['Genre'])
+
+#https://towardsdatascience.com/dealing-with-list-values-in-pandas-dataframes-a177e534f173
+
+
+
+
