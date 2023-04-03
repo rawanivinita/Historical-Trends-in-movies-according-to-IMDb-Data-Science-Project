@@ -108,25 +108,30 @@ print("Correlation between Year and Rating is: ", round(corr_rev_run, 2))
 genres = df_movie["Genre"].str.get_dummies(",")
 df_movie_genre_revenue = pd.concat([df_movie['Revenue (Millions)'], genres], axis=1)
 #We dropped columns with negative correlation in the correlation heatmap
-df_movie_genre_revenue = df_movie_genre_revenue.drop(columns=['Biography', 'Comedy', 'Crime', 'Drama', 'History', 'Horror', 'Music', 'Musical', 'Mystery','Romance', 'Sport','Thriller', 'War'])
+df_movie_genre_revenue = df_movie_genre_revenue.drop(columns=['Biography', 'Comedy', 'Crime', 'Family', 'History', 'Western', 'Music', 'Musical', 'Mystery', 'Sport','Thriller', 'War'])
 
 #HeatMap of correlations between revenue and the movie genres
 plt.figure(figsize=(16,6))
 heatmap = sns.heatmap(df_movie_genre_revenue.corr(), vmin = -1, vmax = 1, annot = True)
 heatmap.set_title("Correlation Heatmap", fontdict = {"fontsize":12}, pad = 12);
-plt.show()
+#plt.show()
 
 #RATING
 df_movie_genre_rating = pd.concat([df_movie['Rating'], genres], axis=1)
 #We dropped columns with negative correlation in the correlation heatmap
-#df_movie_genre_rating = df_movie_genre_rating.drop(columns=['Biography', 'Comedy', 'Crime', 'Drama', 'History', 'Horror', 'Music', 'Musical', 'Mystery','Romance', 'Sport','Thriller', 'War'])
+df_movie_genre_rating = df_movie_genre_rating.drop(columns=['Crime', 'Adventure', 'Comedy', 'Family', 'Fantasy', 'Music', 'Musical', 'Mystery', 'Romance', 'Sci-Fi', 'Sport', 'Thriller', 'War', 'Western'])
 
 #HeatMap of correlations between revenue and the movie genres
 plt.figure(figsize=(16,6))
 heatmap = sns.heatmap(df_movie_genre_rating.corr(), vmin = -1, vmax = 1, annot = True)
 heatmap.set_title("Correlation Heatmap", fontdict = {"fontsize":12}, pad = 12);
-plt.show()
+#plt.show()
 
+print(df_movie['Director'].nunique())
+
+#DIRECTORS
+director_occurences = df_movie['Director'].value_counts().sort_values(ascending=False)
+print(director_occurences.head(20))
 #https://towardsdatascience.com/dealing-with-list-values-in-pandas-dataframes-a177e534f173
 
 
