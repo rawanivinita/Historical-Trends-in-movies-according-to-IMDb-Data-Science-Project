@@ -107,8 +107,18 @@ print("Correlation between Year and Rating is: ", round(corr_rev_run, 2))
 # transfer the genre column entries which are list of strings into list of lists of strings
 
 df_movie['Genre'] = df_movie['Genre'].apply(lambda x : x.split(','))
+#print(df_movie['Genre'])
 
-print(df_movie['Genre'])
+dummies = df_movie['Genre'].str.get_dummies(sep=',')
+df_movie = pd.concat([df_movie, dummies], axis=1)
+
+# Print the updated dataframe
+#print(df_movie.head())
+
+plt.figure(figsize=(16,6))
+heatmap = sns.heatmap(df_movie.corr(), vmin = -1, vmax = 1, annot = True)
+heatmap.set_title("Correlation Heatmap", fontdict = {"fontsize":12}, pad = 12);
+plt.show()
 
 #https://towardsdatascience.com/dealing-with-list-values-in-pandas-dataframes-a177e534f173
 
