@@ -102,57 +102,28 @@ print("Correlation between Runtime and Rating is: ", round(corr_rev_run, 2))
 corr_rev_run = df_movie['Year'].corr(df_movie['Rating'])
 print("Correlation between Year and Rating is: ", round(corr_rev_run, 2))
 
-
-
-# transfer the genre column entries which are list of strings into list of lists of strings
-
-#df_movie['Genre'] = df_movie['Genre'].apply(lambda x : x.split(','))
-#df_movie['Genre'].fillna('NA', inplace = True)
-#df_movie['Genre'] = df_movie['Genre'].str.split(',').tolist()
-#flat_genre = [item for sublist in df_movie['Genre'] for item in sublist]
-#set_genre = set(flat_genre)
-#unique_genre = list(set_genre)
-#df_movie = df_movie.reindex(df_movie.columns.tolist()+unique_genre,axis = 1, fill_value= 0)
-
-#for index,row in df_movie.iterrows():
- #   for val in row.columns.split(','):
-  #      if val != 'NA':
-   #         df_movie.loc[index,val] = 1
-
-
-#df_movie.drop('Genre', axis=1, inplace = True)
-#df_movie
-
+#REVENUE
+#Created column for each genre so converted categorical values of Genre to numerical values
+#Dummies Encoding
 genres = df_movie["Genre"].str.get_dummies(",")
-
-# concatenate the new columns to the original dataframe
 df_movie_genre_revenue = pd.concat([df_movie['Revenue (Millions)'], genres], axis=1)
-df_movie_genre_revenue = df_movie_genre_revenue.drop(columns=['Biography', 'Comedy', 'Crime', 'Drama', ''])
+#We dropped columns with negative correlation in the correlation heatmap
+df_movie_genre_revenue = df_movie_genre_revenue.drop(columns=['Biography', 'Comedy', 'Crime', 'Drama', 'History', 'Horror', 'Music', 'Musical', 'Mystery','Romance', 'Sport','Thriller', 'War'])
 
-#corr_matrix = df_movie_genre_revenue.corr().abs()
-#df_movie_genre_revenue_corr = corr_matrix.where(np.triu(np.ones(corr_matrix.shape),k=1).astype(np.bool))
-#low_corr_list = [column for column in df_movie_genre_revenue_corr.columns if any(df_movie_genre_revenue_corr[column] < 0)]
-#print(low_corr_list)
-#df_movie_genre_revenue = df_movie_genre_revenue.drop(df_movie_genre_revenue.columns[low_corr_list], axis = 1)
-# drop the original "Genre" column
-#df_movie.drop("Genre", axis=1, inplace=True)
-
-#print(df_movie_genre_revenue.head())
-#print((df_movie['Genre']))
-
-#corr_matrix = np.random.randn(5,5)
-#corr_matrix[corr_matrix < 0] = np.nan
-
+#HeatMap of correlations between revenue and the movie genres
 plt.figure(figsize=(16,6))
-#heatmap = sns.heatmap(corr_matrix, cmap = 'coolwarm', annot = True, mask = np.isnan(corr_matrix))
-
-#dummies = df_movie['Genre'].str.get_dummies(sep=', ')
-#df_movie = pd.concat([df_movie, dummies], axis=1)
-
-# Print the updated dataframe
-
-#plt.figure(figsize=(16,6))
 heatmap = sns.heatmap(df_movie_genre_revenue.corr(), vmin = -1, vmax = 1, annot = True)
+heatmap.set_title("Correlation Heatmap", fontdict = {"fontsize":12}, pad = 12);
+plt.show()
+
+#RATING
+df_movie_genre_rating = pd.concat([df_movie['Rating'], genres], axis=1)
+#We dropped columns with negative correlation in the correlation heatmap
+#df_movie_genre_rating = df_movie_genre_rating.drop(columns=['Biography', 'Comedy', 'Crime', 'Drama', 'History', 'Horror', 'Music', 'Musical', 'Mystery','Romance', 'Sport','Thriller', 'War'])
+
+#HeatMap of correlations between revenue and the movie genres
+plt.figure(figsize=(16,6))
+heatmap = sns.heatmap(df_movie_genre_rating.corr(), vmin = -1, vmax = 1, annot = True)
 heatmap.set_title("Correlation Heatmap", fontdict = {"fontsize":12}, pad = 12);
 plt.show()
 
