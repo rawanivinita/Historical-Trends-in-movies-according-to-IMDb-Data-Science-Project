@@ -106,19 +106,36 @@ print("Correlation between Year and Rating is: ", round(corr_rev_run, 2))
 
 # transfer the genre column entries which are list of strings into list of lists of strings
 
-df_movie['Genre'] = df_movie['Genre'].apply(lambda x : x.split(','))
-#print(df_movie['Genre'])
+#df_movie['Genre'] = df_movie['Genre'].apply(lambda x : x.split(','))
+df_movie['Genre'].fillna('NA', inplace = True)
+df_movie['Genre'] = df_movie['Genre'].str.split(',').tolist()
+flat_genre = [item for sublist in df_movie['Genre'] for item in sublist]
+set_genre = set(flat_genre)
+unique_genre = list(set_genre)
+df_movie = df_movie.reindex(df_movie.columns.tolist()+unique_genre,axis = 1, fill_value= 0)
 
-dummies = df_movie['Genre'].str.get_dummies(sep=',')
-df_movie = pd.concat([df_movie, dummies], axis=1)
+for index,row in df_movie.iterrows():
+    for val in row.columns.split(','):
+        if val != 'NA':
+            df_movie.loc[index,val] = 1
+
+
+df_movie.drop('Genre', axis=1, inplace = True)
+df_movie
+
+#print((df_movie['Genre'][0]))
+
+
+#dummies = df_movie['Genre'].str.get_dummies(sep=',')
+#df_movie = pd.concat([df_movie, dummies], axis=1)
 
 # Print the updated dataframe
-#print(df_movie.head())
+#print(df_movie.columns)
 
-plt.figure(figsize=(16,6))
-heatmap = sns.heatmap(df_movie.corr(), vmin = -1, vmax = 1, annot = True)
-heatmap.set_title("Correlation Heatmap", fontdict = {"fontsize":12}, pad = 12);
-plt.show()
+#plt.figure(figsize=(16,6))
+#heatmap = sns.heatmap(df_movie.corr(), vmin = -1, vmax = 1, annot = True)
+#heatmap.set_title("Correlation Heatmap", fontdict = {"fontsize":12}, pad = 12);
+#plt.show()
 
 #https://towardsdatascience.com/dealing-with-list-values-in-pandas-dataframes-a177e534f173
 
