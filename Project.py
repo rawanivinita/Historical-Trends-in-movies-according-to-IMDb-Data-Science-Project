@@ -145,19 +145,77 @@ heatmap.set_title("RATING VS GENRE Correlation Heatmap", fontdict={"fontsize": 1
 director_occurences = df_movie.groupby('Director').size().reset_index(name='Occurence')
 top_20_directors = director_occurences.sort_values('Occurence', ascending=False).head(20)
 
+
 # Dummies Encoding for Top 20 Director categorical variable
 df_movie_directors_revenue = pd.concat([df_movie['Revenue (Millions)'], df_movie['Director']], axis=1)
 
-for director in top_20_directors['Director']:
-    df_movie_directors_revenue[director] = df_movie_directors_revenue['Director'].apply(
-        lambda x: 1 if director in x else 0)
 
-# Dropped columns with negligible correlation in the Revenue vs Director correlation heatmap
+for director in top_20_directors['Director']:
+   df_movie_directors_revenue[director] = df_movie_directors_revenue['Director'].apply(
+       lambda x: 1 if director in x else 0)
+
 df_movie_directors = df_movie_directors_revenue.drop('Director', axis=1)
-print(sum(df_movie_directors['David Yates'] == 1))
+
+
+# Dropped columns with negligible correlation (<0.1) in the Revenue vs Director correlation heatmap
+
+
+corr_matrix = df_movie_directors_revenue.corr()
+heatmap_firstrow = corr_matrix.iloc[0].abs()
+cols_to_drop = heatmap_firstrow[heatmap_firstrow < 0.1].index
+df_movie_directors_revenue = df_movie_directors_revenue.drop(cols_to_drop, axis=1)
+
 
 # Display Revenue vs Director HeatMap
+plt.figure(figsize=(16,6))
+heatmap = sns.heatmap(df_movie_directors_revenue.corr(), vmin = -1, vmax = 1, annot = True)
+heatmap.set_title("Correlation Heatmap", fontdict = {"fontsize":12}, pad = 12);
+plt.show()
+
+
+# -----------RATING VS DIRECTOR Correlation HeatMap----------------
+# Found Top 20 Directors with highest occurences, sorted in descending order
+director_occurences = df_movie.groupby('Director').size().reset_index(name='Occurence')
+top_20_directors = director_occurences.sort_values('Occurence', ascending=False).head(20)
+
+# Dummies Encoding for Top 20 Director categorical variable
+df_movie_directors_rating = pd.concat([df_movie['Rating'], df_movie['Director']], axis=1)
+
+for director in top_20_directors['Director']:
+    df_movie_directors_rating[director] = df_movie_directors_rating['Director'].apply(
+        lambda x: 1 if director in x else 0)
+
+# Dropped columns with negligible correlation in the Rating vs Director correlation heatmap
+df_movie_directors = df_movie_directors_rating.drop('Director', axis=1)
+#print(sum(df_movie_directors['David Yates'] == 1))
+
+# Display Rating vs Director HeatMap
 plt.figure(figsize=(16, 6))
-heatmap = sns.heatmap(df_movie_directors_revenue.corr(), vmin=-1, vmax=1, annot=True)
-heatmap.set_title("Correlation Heatmap", fontdict={"fontsize": 12}, pad=12);
+heatmap = sns.heatmap(df_movie_directors_rating.corr(), vmin=-1, vmax=1, annot=True)
+heatmap.set_title("RATING VS DIRECTOR Correlation Heatmap", fontdict={"fontsize": 12}, pad=12);
+#plt.show()
+
+# -----------REVENUE VS ACTORS Correlation HeatMap----------------
+
+actor_occurences = {}
+df_movie_actor_revenue = pd.concat([df_movie['Revenue (Millions)'], df_movie['Actors']], axis=1)
+
+
+for index, row in df_movie_actor_revenue.iterrows():
+    actors = row['Actors'].split(', ')
+    for actor in actors:
+        if actor in actor_occurences:
+            actor_occurences[actor] += 1
+        else:
+            actor_occurences[actor] = 1
+
+top_actors = sorted(actor_occurences.items(), key=lambda x: x[1], reverse=True)
+top_20_actors = [x[0] for x in top_actors[:20]]
+
+for actor in top_20_actors:
+    df_movie_actor_revenue[actor] = df_movie_actor_revenue['Actors'].apply(lambda x: 1 if actor in x else 0)
+
+plt.figure(figsize=(16, 6))
+heatmap = sns.heatmap(df_movie_actor_revenue.corr(), vmin=-1, vmax=1, annot=True)
+heatmap.set_title("REVENUE VS ACTORS Correlation Heatmap", fontdict={"fontsize": 12}, pad=12);
 plt.show()
