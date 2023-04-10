@@ -98,18 +98,6 @@ y_fit = p[0] * runtime_column + p[1]
 plt.plot(runtime_column, y_fit, color='red')
 
 plt.show()
-# Scatter Plot between Revenue and Rating
-plt.scatter(df_movie['Rating'], df_movie['Revenue (Millions)'])
-plt.title('Revenue (Millions) vs Rating')
-plt.xlabel('Rating')
-plt.ylabel('Revenue (Millions)')
-
-# line of best fit (Revenue Vs Rating)
-p = np.polyfit(rating_column, revenue_column, 1)
-y_fit = p[0] * rating_column + p[1]
-plt.plot(rating_column, y_fit, color='red')
-
-plt.show()
 
 # Scatter Plot between Votes and Rating
 plt.scatter(df_movie['Votes'], df_movie['Rating'])
@@ -159,6 +147,7 @@ print("Correlation between Votes and Revenue is: ", round(corr_rev_run, 2))
 
 corr_rev_run = df_movie['Metascore'].corr(df_movie['Revenue (Millions)'])
 print("Correlation between Metascore and Revenue is: ", round(corr_rev_run, 2))
+
 corr_rev_run = df_movie['Revenue (Millions)'].corr(df_movie['Rating'])
 print("Correlation between Revenue and Rating is: ", round(corr_rev_run, 2))
 
