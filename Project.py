@@ -85,6 +85,58 @@ plt.plot(rating_column, y_fit, color='red')
 
 # plt.show()
 
+# Scatter Plot between Votes and Revenue
+plt.scatter(df_movie['Votes'], df_movie['Revenue (Millions)'])
+plt.title('Votes vs Runtime (Minutes)')
+plt.xlabel('Votes')
+plt.ylabel('Revenue (Millions)')
+
+# line of best fit (Votes Vs Revenue)
+runtime_column = df_movie['Runtime (Minutes)']
+p = np.polyfit(runtime_column, revenue_column, 1)
+y_fit = p[0] * runtime_column + p[1]
+plt.plot(runtime_column, y_fit, color='red')
+
+plt.show()
+# Scatter Plot between Revenue and Rating
+plt.scatter(df_movie['Rating'], df_movie['Revenue (Millions)'])
+plt.title('Revenue (Millions) vs Rating')
+plt.xlabel('Rating')
+plt.ylabel('Revenue (Millions)')
+
+# line of best fit (Revenue Vs Rating)
+p = np.polyfit(rating_column, revenue_column, 1)
+y_fit = p[0] * rating_column + p[1]
+plt.plot(rating_column, y_fit, color='red')
+
+plt.show()
+
+# Scatter Plot between Votes and Rating
+plt.scatter(df_movie['Votes'], df_movie['Rating'])
+plt.title('Votes vs Rating')
+plt.xlabel('Votes')
+plt.ylabel('Rating')
+
+# line of best fit (Votes Vs Rating)
+p = np.polyfit(rating_column, revenue_column, 1)
+y_fit = p[0] * rating_column + p[1]
+plt.plot(rating_column, y_fit, color='red')
+
+plt.show()
+
+# Scatter Plot between Metascore and Rating
+plt.scatter(df_movie['Metascore'], df_movie['Rating'])
+plt.title('Rating vs Metascore')
+plt.xlabel('Metascore')
+plt.ylabel('Rating')
+
+# line of best fit (Metascore Vs Rating)
+rating_column = df_movie['Rating']
+p = np.polyfit(year_column, rating_column, 1)
+y_fit = p[0] * year_column + p[1]
+plt.plot(year_column, y_fit, color='red')
+
+#plt.show()
 
 # print the correlation
 corr_rev_run = df_movie['Runtime (Minutes)'].corr(df_movie['Revenue (Millions)'])
@@ -98,6 +150,27 @@ print("Correlation between Runtime and Rating is: ", round(corr_rev_run, 2))
 
 corr_rev_run = df_movie['Year'].corr(df_movie['Rating'])
 print("Correlation between Year and Rating is: ", round(corr_rev_run, 2))
+
+corr_rev_run = df_movie['Rating'].corr(df_movie['Revenue (Millions)'])
+print("Correlation between Rating and Revenue is: ", round(corr_rev_run, 2))
+
+corr_rev_run = df_movie['Votes'].corr(df_movie['Revenue (Millions)'])
+print("Correlation between Votes and Revenue is: ", round(corr_rev_run, 2))
+
+corr_rev_run = df_movie['Metascore'].corr(df_movie['Revenue (Millions)'])
+print("Correlation between Metascore and Revenue is: ", round(corr_rev_run, 2))
+corr_rev_run = df_movie['Revenue (Millions)'].corr(df_movie['Rating'])
+print("Correlation between Revenue and Rating is: ", round(corr_rev_run, 2))
+
+corr_rev_run = df_movie['Votes'].corr(df_movie['Rating'])
+print("Correlation between Votes and Rating is: ", round(corr_rev_run, 2))
+
+corr_rev_run = df_movie['Metascore'].corr(df_movie['Rating'])
+print("Correlation between Metascore and Rating is: ", round(corr_rev_run, 2))
+
+
+
+
 
 # -------------------Correlation HeatMaps for Categorical variables---------------------------------------------------
 # Created columns for each unique element of Categorical variable by converting categorical values to numeric values
