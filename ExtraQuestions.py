@@ -24,7 +24,7 @@ plt.scatter(X,Y)
 plt.title('Rank vs Number of Votes')
 plt.xlabel('Rank')
 plt.ylabel('Number of Votes')
-#plt.show()
+plt.show()
 
 # Found Top 20 Actors with highest occurences, sorted in descending order
 actor_occurences_extra = {}

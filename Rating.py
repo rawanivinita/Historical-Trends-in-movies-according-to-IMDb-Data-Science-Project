@@ -34,7 +34,7 @@ p = np.polyfit(year_column, rating_column, 1)
 y_fit = p[0] * year_column + p[1]
 plt.plot(year_column, y_fit, color='red')
 
-#plt.show()
+plt.show()
 
 
 # Scatter Plot between Runtime and Rating
@@ -48,7 +48,7 @@ p = np.polyfit(runtime_column, rating_column, 1)
 y_fit = p[0] * runtime_column + p[1]
 plt.plot(runtime_column, y_fit, color='red')
 
-#plt.show()
+plt.show()
 
 # Scatter Plot between Revenue and Rating
 plt.scatter(df_movie['Rating'], df_movie['Revenue (Millions)'])
@@ -61,7 +61,7 @@ p = np.polyfit(rating_column, revenue_column, 1)
 y_fit = p[0] * rating_column + p[1]
 plt.plot(rating_column, y_fit, color='red')
 
-#plt.show()
+plt.show()
 
 # Scatter Plot between Votes and Rating
 plt.scatter(df_movie['Votes'], df_movie['Rating'])
@@ -74,7 +74,7 @@ p = np.polyfit(votes_column, rating_column, 1)
 y_fit = p[0] * rating_column + p[1]
 plt.plot(rating_column, y_fit, color='red')
 
-#plt.show()
+plt.show()
 
 # Scatter Plot between Metascore and Rating
 plt.scatter(df_movie['Metascore'], df_movie['Rating'])
@@ -88,21 +88,21 @@ p = np.polyfit(metascore_column, rating_column, 1)
 y_fit = p[0] * metascore_column + p[1]
 plt.plot(metascore_column, y_fit, color='red')
 
-#plt.show()
+plt.show()
 
 
 
 corr_rev_run = df_movie['Runtime (Minutes)'].corr(df_movie['Rating'])
-print("Correlation between Runtime and Rating is: ", round(corr_rev_run, 2))
+#print("Correlation between Runtime and Rating is: ", round(corr_rev_run, 2))
 
 corr_rev_run = df_movie['Year'].corr(df_movie['Rating'])
-print("Correlation between Year and Rating is: ", round(corr_rev_run, 2))
+#print("Correlation between Year and Rating is: ", round(corr_rev_run, 2))
 
 corr_rev_run = df_movie['Votes'].corr(df_movie['Rating'])
-print("Correlation between Votes and Rating is: ", round(corr_rev_run, 2))
+#print("Correlation between Votes and Rating is: ", round(corr_rev_run, 2))
 
 corr_rev_run = df_movie['Metascore'].corr(df_movie['Rating'])
-print("Correlation between Metascore and Rating is: ", round(corr_rev_run, 2))
+#print("Correlation between Metascore and Rating is: ", round(corr_rev_run, 2))
 
 
 # -------------------Correlation HeatMaps for Categorical variables---------------------------------------------------
@@ -126,7 +126,7 @@ df_movie_genre_rating = df_movie_genre_rating.drop(cols_to_drop, axis=1)
 plt.figure(figsize=(16, 6))
 heatmap = sns.heatmap(df_movie_genre_rating.corr(), vmin=-1, vmax=1, annot=True)
 heatmap.set_title("RATING VS GENRE Correlation Heatmap", fontdict={"fontsize": 12}, pad=12);
-#plt.show()
+plt.show()
 
 
 
@@ -160,7 +160,7 @@ df_movie_directors_rating = df_movie_directors_rating.drop(cols_to_drop, axis=1)
 plt.figure(figsize=(16, 6))
 heatmap = sns.heatmap(df_movie_directors_rating.corr(), vmin=-1, vmax=1, annot=True)
 heatmap.set_title("RATING VS DIRECTOR Correlation Heatmap", fontdict={"fontsize": 12}, pad=12);
-#plt.show()
+plt.show()
 
 
 # -----------RATING VS ACTORS Correlation HeatMap----------------
@@ -197,7 +197,7 @@ df_movie_actor_rating = df_movie_actor_rating.drop(cols_to_drop, axis=1)
 plt.figure(figsize=(16, 6))
 heatmap = sns.heatmap(df_movie_actor_rating.corr(), vmin=-1, vmax=1, annot=True)
 heatmap.set_title("RATING VS ACTORS Correlation Heatmap", fontdict={"fontsize": 12}, pad=12);
-#plt.show()
+plt.show()
 
 # -------------------Random Forest Model---------------------------------------------------
 
@@ -212,6 +212,9 @@ predictors_rating = predictors_rating.drop(cols_to_drop, axis=1)
 predictors_rating = predictors_rating.drop('Rank', axis=1)
 predictors_rating = predictors_rating.drop('Votes', axis=1) #To reduce overfitting
 
+heatmap_revenue = sns.heatmap(predictors_rating.corr(), vmin=-1, vmax=1, annot=True)
+heatmap_revenue.set_title("Rating Predictors Correlation Heatmap", fontdict={"fontsize": 12}, pad=12);
+plt.show()
 print(predictors_rating.columns)
 
 # Split the data into independant variables and dependant variable
@@ -233,6 +236,7 @@ r_squared_test_rating = r2_score(dependant_test_rating, predict_dependant_test_r
 adj_r_squared_train_rating = 1 - ((1 - r_squared_train_rating) * (838 - 1) / (838 - len(independant_variables_rating.columns) - 1))
 adj_r_squared_test_rating = 1 - ((1 - r_squared_test_rating) * (838 - 1) / (838 - len(independant_variables_rating.columns) - 1))
 
+print("Mean Squared Error: ", mean_squared_error_rating)
 print("Root Mean Squared Error: ", sqrt(mean_squared_error_rating))
 print("Train Adjusted R Squared", adj_r_squared_train_rating)
 print("Test Adjusted R Squared", adj_r_squared_test_rating)
@@ -243,7 +247,7 @@ residuals_rating = dependant_test_rating - predict_dependant_test_rating
 # Scatter plot of the residuals against the predicted values
 plt.scatter(predict_dependant_test_rating, residuals_rating)
 plt.axhline(y=0, color='r', linestyle='-')
-plt.title('Residual plot')
+plt.title('Residual plot of Ratings')
 plt.xlabel('Predicted values')
 plt.ylabel('Residuals')
-#plt.show()
+plt.show()
