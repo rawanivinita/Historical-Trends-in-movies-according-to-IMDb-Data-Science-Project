@@ -206,8 +206,13 @@ heatmap_firstrow = corr_matrix.iloc[0].abs()
 cols_to_drop = heatmap_firstrow[heatmap_firstrow < 0.2].index
 predictors = predictors.drop(cols_to_drop, axis=1)
 predictors = predictors.drop('Rank', axis=1)
+predictors = predictors.drop('Rating', axis=1) #To fix overfitting
+#predictors = predictors.drop('Runtime (Minutes)', axis=1) #No removing this
+predictors = predictors.drop('Action', axis=1) #To fix overfitting
 
-print(predictors.columns)
+heatmap = sns.heatmap(predictors.corr(), vmin=-1, vmax=1, annot=True)
+heatmap.set_title("Predictors Correlation Heatmap", fontdict={"fontsize": 12}, pad=12);
+plt.show()
 
 # Split the data into independant variables and dependant variable
 independant_variables = predictors.drop('Revenue (Millions)', axis=1)
