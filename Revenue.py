@@ -34,7 +34,7 @@ votes_column = df_movie['Votes']
 p = np.polyfit(year_column, revenue_column, 1)
 y_fit = p[0] * year_column + p[1]
 plt.plot(year_column, y_fit, color='red')
-plt.show()
+#plt.show()
 
 logged_revenue = np.log(df_movie['Revenue (Millions)'])
 logged_runtime = np.log(df_movie['Runtime (Minutes)'])
@@ -50,7 +50,7 @@ p = np.polyfit(runtime_column, revenue_column, 1)
 y_fit = p[0] * runtime_column + p[1]
 plt.plot(runtime_column, y_fit, color='red')
 
-plt.show()
+#plt.show()
 
 # Scatter Plot between Revenue and Rating
 plt.scatter(df_movie['Rating'], df_movie['Revenue (Millions)'])
@@ -63,7 +63,7 @@ p = np.polyfit(rating_column, revenue_column, 1)
 y_fit = p[0] * rating_column + p[1]
 plt.plot(rating_column, y_fit, color='red')
 
-plt.show()
+#plt.show()
 
 # Scatter Plot between Votes and Revenue
 plt.scatter(df_movie['Votes'], df_movie['Revenue (Millions)'])
@@ -76,7 +76,7 @@ p = np.polyfit(votes_column, revenue_column, 1)
 y_fit = p[0] * runtime_column + p[1]
 plt.plot(runtime_column, y_fit, color='red')
 
-plt.show()
+#plt.show()
 
 # print the correlation
 corr_rev_run = df_movie['Runtime (Minutes)'].corr(df_movie['Revenue (Millions)'])
@@ -119,7 +119,7 @@ df_movie_genre_revenue = df_movie_genre_revenue.drop(cols_to_drop, axis=1)
 plt.figure(figsize=(16, 6))
 heatmap = sns.heatmap(df_movie_genre_revenue.corr(), vmin=-1, vmax=1, annot=True)
 heatmap.set_title("REVENUE VS GENRE Correlation Heatmap", fontdict={"fontsize": 12}, pad=12);
-plt.show()
+#plt.show()
 
 # -----------REVENUE VS DIRECTOR Correlation HeatMap----------------
 
@@ -147,7 +147,7 @@ df_movie_directors_revenue = df_movie_directors_revenue.drop(cols_to_drop, axis=
 plt.figure(figsize=(16, 6))
 heatmap = sns.heatmap(df_movie_directors_revenue.corr(), vmin=-1, vmax=1, annot=True)
 heatmap.set_title("REVENUE VS DIRECTORS Correlation Heatmap", fontdict={"fontsize": 12}, pad=12);
-plt.show()
+#plt.show()
 
 
 # -----------REVENUE VS ACTORS Correlation HeatMap----------------
@@ -184,7 +184,7 @@ df_movie_actor_revenue = df_movie_actor_revenue.drop(cols_to_drop, axis=1)
 #plt.figure(figsize=(16, 6))
 heatmap = sns.heatmap(df_movie_actor_revenue.corr(), vmin=-1, vmax=1, annot=True)
 heatmap.set_title("REVENUE VS ACTORS Correlation Heatmap", fontdict={"fontsize": 12}, pad=12);
-plt.show()
+#plt.show()
 
 # -------------------Scatter Plots for categorical variables---------------------------------------------------
 
@@ -193,30 +193,31 @@ plt.bar(df_movie_genre_revenue['Action'], df_movie_genre_revenue['Revenue (Milli
 plt.title('Genre Action vs Runtime (Minutes)')
 plt.xlabel('Genre Action')
 plt.ylabel('Revenue (Millions)')
-plt.show()
+#plt.show()
 
 # -------------------Random Forest Model---------------------------------------------------
 
-predictors = pd.merge(df_movie_genre_revenue, df_movie_actor_revenue)
-predictors = pd.merge(predictors, df_movie_directors_revenue)
+predictors_revenue = pd.merge(df_movie_genre_revenue, df_movie_actor_revenue)
+predictors_revenue = pd.merge(predictors_revenue, df_movie_directors_revenue)
 
 # Dropped columns with weak correlation (<0.2)
-corr_matrix = predictors.corr()
+corr_matrix = predictors_revenue.corr()
 heatmap_firstrow = corr_matrix.iloc[0].abs()
 cols_to_drop = heatmap_firstrow[heatmap_firstrow < 0.2].index
-predictors = predictors.drop(cols_to_drop, axis=1)
-predictors = predictors.drop('Rank', axis=1)
-predictors = predictors.drop('Rating', axis=1) #To fix overfitting
+predictors_revenue = predictors_revenue.drop(cols_to_drop, axis=1)
+predictors_revenue = predictors_revenue.drop('Rank', axis=1)
+#predictors_revenue = predictors_revenue.drop('Rating', axis=1) #To fix overfitting
 #predictors = predictors.drop('Runtime (Minutes)', axis=1) #No removing this
-predictors = predictors.drop('Action', axis=1) #To fix overfitting
+#predictors = predictors.drop('Drama', axis=1) #To fix overfitting
+#predictors = predictors.drop('Votes', axis=1) #To fix overfitting
 
-heatmap = sns.heatmap(predictors.corr(), vmin=-1, vmax=1, annot=True)
+heatmap = sns.heatmap(predictors_revenue.corr(), vmin=-1, vmax=1, annot=True)
 heatmap.set_title("Predictors Correlation Heatmap", fontdict={"fontsize": 12}, pad=12);
-plt.show()
+#plt.show()
 
 # Split the data into independant variables and dependant variable
-independant_variables = predictors.drop('Revenue (Millions)', axis=1)
-dependant_variable = predictors['Revenue (Millions)']
+independant_variables = predictors_revenue.drop('Revenue (Millions)', axis=1)
+dependant_variable = predictors_revenue['Revenue (Millions)']
 
 # Split the data into training and test sets
 independant_train, independant_test, dependant_train, dependant_test = train_test_split(independant_variables, dependant_variable, test_size=0.2)
@@ -230,8 +231,8 @@ predict_dependant_test = randomForestModel.predict(independant_test)
 mean_squared_error = mean_squared_error(dependant_test, predict_dependant_test)
 r_squared_train = r2_score(dependant_train, predict_dependant_train)
 r_squared_test = r2_score(dependant_test, predict_dependant_test)
-adj_r_squared_train = 1 - ((1 - r_squared_train) * (838 - 1) / (838 - 8 - 1))
-adj_r_squared_test = 1 - ((1 - r_squared_test) * (838 - 1) / (838 - 8 - 1))
+adj_r_squared_train = 1 - ((1 - r_squared_train) * (838 - 1) / (838 - len(independant_variables.columns) - 1))
+adj_r_squared_test = 1 - ((1 - r_squared_test) * (838 - 1) / (838 - len(independant_variables.columns) - 1))
 
 print("Root Mean Squared Error: ", sqrt(mean_squared_error))
 print("Train Adjusted R Squared", adj_r_squared_train)
@@ -246,4 +247,4 @@ plt.axhline(y=0, color='r', linestyle='-')
 plt.title('Residual plot')
 plt.xlabel('Predicted values')
 plt.ylabel('Residuals')
-plt.show()
+#plt.show()

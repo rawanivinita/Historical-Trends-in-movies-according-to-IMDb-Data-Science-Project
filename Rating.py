@@ -201,21 +201,22 @@ plt.show()
 
 # -------------------Random Forest Model---------------------------------------------------
 
-predictors = pd.merge(df_movie_genre_rating, df_movie_actor_rating)
-predictors = pd.merge(predictors, df_movie_directors_rating)
+predictors_rating = pd.merge(df_movie_genre_rating, df_movie_actor_rating)
+predictors_rating = pd.merge(predictors_rating, df_movie_directors_rating)
 
 # Dropped columns with weak correlation (<0.2)
-corr_matrix = predictors.corr()
+corr_matrix = predictors_rating.corr()
 heatmap_firstrow = corr_matrix.iloc[0].abs()
 cols_to_drop = heatmap_firstrow[heatmap_firstrow < 0.2].index
-predictors = predictors.drop(cols_to_drop, axis=1)
-predictors = predictors.drop('Rank', axis=1)
+predictors_rating = predictors_rating.drop(cols_to_drop, axis=1)
+predictors_rating = predictors_rating.drop('Rank', axis=1)
+predictors_rating = predictors_rating.drop('Votes', axis=1) #To reduce overfitting
 
-print(predictors.columns)
+print(predictors_rating.columns)
 
 # Split the data into independant variables and dependant variable
-independant_variables = predictors.drop('Rating', axis=1)
-dependant_variable = predictors['Rating']
+independant_variables = predictors_rating.drop('Rating', axis=1)
+dependant_variable = predictors_rating['Rating']
 
 # Split the data into training and test sets
 independant_train, independant_test, dependant_train, dependant_test = train_test_split(independant_variables, dependant_variable, test_size=0.2)
@@ -229,8 +230,8 @@ predict_dependant_test = randomForestModel.predict(independant_test)
 mean_squared_error = mean_squared_error(dependant_test, predict_dependant_test)
 r_squared_train = r2_score(dependant_train, predict_dependant_train)
 r_squared_test = r2_score(dependant_test, predict_dependant_test)
-adj_r_squared_train = 1 - ((1 - r_squared_train) * (838 - 1) / (838 - 8 - 1))
-adj_r_squared_test = 1 - ((1 - r_squared_test) * (838 - 1) / (838 - 8 - 1))
+adj_r_squared_train = 1 - ((1 - r_squared_train) * (838 - 1) / (838 - 7 - 1))
+adj_r_squared_test = 1 - ((1 - r_squared_test) * (838 - 1) / (838 - 7 - 1))
 
 print("Root Mean Squared Error: ", sqrt(mean_squared_error))
 print("Train Adjusted R Squared", adj_r_squared_train)
