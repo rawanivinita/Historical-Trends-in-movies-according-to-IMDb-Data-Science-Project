@@ -12,86 +12,86 @@ from sklearn.model_selection import RandomizedSearchCV, train_test_split
 from scipy.stats import randint
 
 
-df_movie = pd.read_csv("IMDB-Movie-Data.csv")
+df_movie_revenue = pd.read_csv("IMDB-Movie-Data.csv")
 
 #Revenue and MetaScore are the only columns with missing entries,so we removed rows with the missing values
 
-df_movie = df_movie.dropna(axis=0, how='any')
+df_movie_revenue = df_movie_revenue.dropna(axis=0, how='any')
 # df_movie.info()
 
 # Scatter Plot between Year and Revenue
-plt.scatter(df_movie['Year'], df_movie['Revenue (Millions)'])
+plt.scatter(df_movie_revenue['Year'], df_movie_revenue['Revenue (Millions)'])
 plt.title('Revenue (Millions) vs Year')
 plt.xlabel('Year')
 plt.ylabel('Revenue (Millions)')
 
 # line of best fit (Year Vs Revenue)
-year_column = df_movie['Year']
-revenue_column = df_movie['Revenue (Millions)']
-rating_column = df_movie['Rating']
-runtime_column = df_movie['Runtime (Minutes)']
-votes_column = df_movie['Votes']
-p = np.polyfit(year_column, revenue_column, 1)
-y_fit = p[0] * year_column + p[1]
-plt.plot(year_column, y_fit, color='red')
+year_column_revenue = df_movie_revenue['Year']
+revenue_column_revenue = df_movie_revenue['Revenue (Millions)']
+rating_column_revenue = df_movie_revenue['Rating']
+runtime_column_revenue = df_movie_revenue['Runtime (Minutes)']
+votes_column_revenue = df_movie_revenue['Votes']
+p_revenue = np.polyfit(year_column_revenue, revenue_column_revenue, 1)
+y_fit_revenue = p_revenue[0] * year_column_revenue + p_revenue[1]
+plt.plot(year_column_revenue, y_fit_revenue, color='red')
 #plt.show()
 
-logged_revenue = np.log(df_movie['Revenue (Millions)'])
-logged_runtime = np.log(df_movie['Runtime (Minutes)'])
+logged_revenue = np.log(df_movie_revenue['Revenue (Millions)'])
+logged_runtime = np.log(df_movie_revenue['Runtime (Minutes)'])
 
 # Scatter Plot between Runtime and Revenue
-plt.scatter(df_movie['Runtime (Minutes)'], df_movie['Revenue (Millions)'])
+plt.scatter(df_movie_revenue['Runtime (Minutes)'], df_movie_revenue['Revenue (Millions)'])
 plt.title('Revenue (Millions) vs Runtime (Minutes)')
 plt.xlabel('Runtime (Minutes)')
 plt.ylabel('Revenue (Millions)')
 
 # line of best fit (Runtime Vs Revenue)
-p = np.polyfit(runtime_column, revenue_column, 1)
-y_fit = p[0] * runtime_column + p[1]
-plt.plot(runtime_column, y_fit, color='red')
+p_revenue = np.polyfit(runtime_column_revenue, revenue_column_revenue, 1)
+y_fit_revenue = p_revenue[0] * runtime_column_revenue + p_revenue[1]
+plt.plot(runtime_column_revenue, y_fit_revenue, color='red')
 
 #plt.show()
 
 # Scatter Plot between Revenue and Rating
-plt.scatter(df_movie['Rating'], df_movie['Revenue (Millions)'])
+plt.scatter(df_movie_revenue['Rating'], df_movie_revenue['Revenue (Millions)'])
 plt.title('Revenue (Millions) vs Rating')
 plt.xlabel('Rating')
 plt.ylabel('Revenue (Millions)')
 
 # line of best fit (Revenue Vs Rating)
-p = np.polyfit(rating_column, revenue_column, 1)
-y_fit = p[0] * rating_column + p[1]
-plt.plot(rating_column, y_fit, color='red')
+p_revenue = np.polyfit(rating_column_revenue, revenue_column_revenue, 1)
+y_fit_revenue = p_revenue[0] * rating_column_revenue + p_revenue[1]
+plt.plot(rating_column_revenue, y_fit_revenue, color='red')
 
 #plt.show()
 
 # Scatter Plot between Votes and Revenue
-plt.scatter(df_movie['Votes'], df_movie['Revenue (Millions)'])
+plt.scatter(df_movie_revenue['Votes'], df_movie_revenue['Revenue (Millions)'])
 plt.title('Votes vs Runtime (Minutes)')
 plt.xlabel('Votes')
 plt.ylabel('Revenue (Millions)')
 
 # line of best fit (Votes Vs Revenue)
-p = np.polyfit(votes_column, revenue_column, 1)
-y_fit = p[0] * runtime_column + p[1]
-plt.plot(runtime_column, y_fit, color='red')
+p_revenue = np.polyfit(votes_column_revenue, revenue_column_revenue, 1)
+y_fit_revenue = p_revenue[0] * runtime_column_revenue + p_revenue[1]
+plt.plot(runtime_column_revenue, y_fit_revenue, color='red')
 
 #plt.show()
 
 # print the correlation
-corr_rev_run = df_movie['Runtime (Minutes)'].corr(df_movie['Revenue (Millions)'])
+corr_rev_run = df_movie_revenue['Runtime (Minutes)'].corr(df_movie_revenue['Revenue (Millions)'])
 print("Correlation between Runtime and Revenue is: ", round(corr_rev_run, 2))
 
-corr_rev_run = df_movie['Year'].corr(df_movie['Revenue (Millions)'])
+corr_rev_run = df_movie_revenue['Year'].corr(df_movie_revenue['Revenue (Millions)'])
 print("Correlation between year and Revenue is: ", round(corr_rev_run, 2))
 
-corr_rev_run = df_movie['Rating'].corr(df_movie['Revenue (Millions)'])
+corr_rev_run = df_movie_revenue['Rating'].corr(df_movie_revenue['Revenue (Millions)'])
 print("Correlation between Rating and Revenue is: ", round(corr_rev_run, 2))
 
-corr_rev_run = df_movie['Votes'].corr(df_movie['Revenue (Millions)'])
+corr_rev_run = df_movie_revenue['Votes'].corr(df_movie_revenue['Revenue (Millions)'])
 print("Correlation between Votes and Revenue is: ", round(corr_rev_run, 2))
 
-corr_rev_run = df_movie['Metascore'].corr(df_movie['Revenue (Millions)'])
+corr_rev_run = df_movie_revenue['Metascore'].corr(df_movie_revenue['Revenue (Millions)'])
 print("Correlation between Metascore and Revenue is: ", round(corr_rev_run, 2))
 
 # -------------------Correlation HeatMaps for Categorical variables---------------------------------------------------
@@ -105,32 +105,32 @@ print("Correlation between Metascore and Revenue is: ", round(corr_rev_run, 2))
 # -----------REVENUE VS GENRE Correlation Heatmap-----------
 
 # Dummies Encoding for Genre categorical variable
-genres = df_movie["Genre"].str.get_dummies(",")
-df_movie_genre_revenue = pd.concat([df_movie['Revenue (Millions)'], genres, df_movie['Rank']], axis=1)
+genres_revenue = df_movie_revenue["Genre"].str.get_dummies(",")
+df_movie_genre_revenue = pd.concat([df_movie_revenue['Revenue (Millions)'], genres_revenue, df_movie_revenue['Rank']], axis=1)
 
 # Dropped columns with negligible correlation (<0.1) in the Revenue vs Genre correlation heatmap
 
-corr_matrix = df_movie_genre_revenue.corr()
-heatmap_firstrow = corr_matrix.iloc[0].abs()
-cols_to_drop = heatmap_firstrow[heatmap_firstrow < 0.1].index
-df_movie_genre_revenue = df_movie_genre_revenue.drop(cols_to_drop, axis=1)
+corr_matrix_revenue = df_movie_genre_revenue.corr()
+heatmap_firstrow_revenue = corr_matrix_revenue.iloc[0].abs()
+cols_to_drop_revenue = heatmap_firstrow_revenue[heatmap_firstrow_revenue < 0.1].index
+df_movie_genre_revenue = df_movie_genre_revenue.drop(cols_to_drop_revenue, axis=1)
 
 # Display Revenue vs Genre HeatMap
 plt.figure(figsize=(16, 6))
-heatmap = sns.heatmap(df_movie_genre_revenue.corr(), vmin=-1, vmax=1, annot=True)
-heatmap.set_title("REVENUE VS GENRE Correlation Heatmap", fontdict={"fontsize": 12}, pad=12);
+heatmap_revenue = sns.heatmap(df_movie_genre_revenue.corr(), vmin=-1, vmax=1, annot=True)
+heatmap_revenue.set_title("REVENUE VS GENRE Correlation Heatmap", fontdict={"fontsize": 12}, pad=12);
 #plt.show()
 
 # -----------REVENUE VS DIRECTOR Correlation HeatMap----------------
 
 # Found Top 20 Directors with highest occurences, sorted in descending order
-director_occurences = df_movie.groupby('Director').size().reset_index(name='Occurence')
-top_20_directors = director_occurences.sort_values('Occurence', ascending=False).head(20)
+director_occurences_revenue = df_movie_revenue.groupby('Director').size().reset_index(name='Occurence')
+top_20_directors_revenue = director_occurences_revenue.sort_values('Occurence', ascending=False).head(20)
 
 # Dummies Encoding for Top 20 Director categorical variable
-df_movie_directors_revenue = pd.concat([df_movie['Revenue (Millions)'], df_movie['Director'], df_movie['Rank']], axis=1)
+df_movie_directors_revenue = pd.concat([df_movie_revenue['Revenue (Millions)'], df_movie_revenue['Director'], df_movie_revenue['Rank']], axis=1)
 
-for director in top_20_directors['Director']:
+for director in top_20_directors_revenue['Director']:
     df_movie_directors_revenue[director] = df_movie_directors_revenue['Director'].apply(
         lambda x: 1 if director in x else 0)
 
@@ -138,52 +138,52 @@ df_movie_directors_revenue = df_movie_directors_revenue.drop('Director', axis=1)
 
 # Dropped columns with negligible correlation (<0.1) in the Revenue vs Director correlation heatmap
 
-corr_matrix = df_movie_directors_revenue.corr()
-heatmap_firstrow = corr_matrix.iloc[0].abs()
-cols_to_drop = heatmap_firstrow[heatmap_firstrow < 0.1].index
-df_movie_directors_revenue = df_movie_directors_revenue.drop(cols_to_drop, axis=1)
+corr_matrix_revenue = df_movie_directors_revenue.corr()
+heatmap_firstrow_revenue = corr_matrix_revenue.iloc[0].abs()
+cols_to_drop_revenue = heatmap_firstrow_revenue[heatmap_firstrow_revenue < 0.1].index
+df_movie_directors_revenue = df_movie_directors_revenue.drop(cols_to_drop_revenue, axis=1)
 
 # Display Revenue vs Director HeatMap
 plt.figure(figsize=(16, 6))
-heatmap = sns.heatmap(df_movie_directors_revenue.corr(), vmin=-1, vmax=1, annot=True)
-heatmap.set_title("REVENUE VS DIRECTORS Correlation Heatmap", fontdict={"fontsize": 12}, pad=12);
+heatmap_revenue = sns.heatmap(df_movie_directors_revenue.corr(), vmin=-1, vmax=1, annot=True)
+heatmap_revenue.set_title("REVENUE VS DIRECTORS Correlation Heatmap", fontdict={"fontsize": 12}, pad=12);
 #plt.show()
 
 
 # -----------REVENUE VS ACTORS Correlation HeatMap----------------
 
 # Found Top 20 Actors with highest occurences, sorted in descending order
-actor_occurences = {}
-df_movie_actor_revenue = pd.concat([df_movie['Revenue (Millions)'], df_movie['Actors'], df_movie['Rank'], df_movie['Rating'],
-                                    df_movie['Votes'], df_movie['Runtime (Minutes)']], axis=1)
+actor_occurences_revenue = {}
+df_movie_actor_revenue = pd.concat([df_movie_revenue['Revenue (Millions)'], df_movie_revenue['Actors'], df_movie_revenue['Rank'], df_movie_revenue['Rating'],
+                                    df_movie_revenue['Votes'], df_movie_revenue['Runtime (Minutes)']], axis=1)
 
 for index, row in df_movie_actor_revenue.iterrows():
-    actors = row['Actors'].split(', ')
-    for actor in actors:
-        if actor in actor_occurences:
-            actor_occurences[actor] += 1
+    actors_revenue = row['Actors'].split(', ')
+    for actor in actors_revenue:
+        if actor in actor_occurences_revenue:
+            actor_occurences_revenue[actor] += 1
         else:
-            actor_occurences[actor] = 1
+            actor_occurences_revenue[actor] = 1
 
-top_actors = sorted(actor_occurences.items(), key=lambda x: x[1], reverse=True)
-top_20_actors = [x[0] for x in top_actors[:20]]
+top_actors_revenue = sorted(actor_occurences_revenue.items(), key=lambda x: x[1], reverse=True)
+top_20_actors_revenue = [x[0] for x in top_actors_revenue[:20]]
 
 # Dummies Encoding for Top 20 Actors categorical variable
-for actor in top_20_actors:
+for actor in top_20_actors_revenue:
     df_movie_actor_revenue[actor] = df_movie_actor_revenue['Actors'].apply(lambda x: 1 if actor in x else 0)
 
 df_movie_actor_revenue = df_movie_actor_revenue.drop('Actors', axis=1)
 
 # Dropped columns with negligible correlation (<0.1) in the Revenue vs Actors correlation heatmap
-corr_matrix = df_movie_actor_revenue.corr()
-heatmap_firstrow = corr_matrix.iloc[0].abs()
-cols_to_drop = heatmap_firstrow[heatmap_firstrow < 0.1].index
-df_movie_actor_revenue = df_movie_actor_revenue.drop(cols_to_drop, axis=1)
+corr_matrix_revenue = df_movie_actor_revenue.corr()
+heatmap_firstrow_revenue = corr_matrix_revenue.iloc[0].abs()
+cols_to_drop_revenue = heatmap_firstrow_revenue[heatmap_firstrow_revenue < 0.1].index
+df_movie_actor_revenue = df_movie_actor_revenue.drop(cols_to_drop_revenue, axis=1)
 
 # Display Revenue vs Actor HeatMap
 #plt.figure(figsize=(16, 6))
-heatmap = sns.heatmap(df_movie_actor_revenue.corr(), vmin=-1, vmax=1, annot=True)
-heatmap.set_title("REVENUE VS ACTORS Correlation Heatmap", fontdict={"fontsize": 12}, pad=12);
+heatmap_revenue = sns.heatmap(df_movie_actor_revenue.corr(), vmin=-1, vmax=1, annot=True)
+heatmap_revenue.set_title("REVENUE VS ACTORS Correlation Heatmap", fontdict={"fontsize": 12}, pad=12);
 #plt.show()
 
 # -------------------Scatter Plots for categorical variables---------------------------------------------------
@@ -201,48 +201,48 @@ predictors_revenue = pd.merge(df_movie_genre_revenue, df_movie_actor_revenue)
 predictors_revenue = pd.merge(predictors_revenue, df_movie_directors_revenue)
 
 # Dropped columns with weak correlation (<0.2)
-corr_matrix = predictors_revenue.corr()
-heatmap_firstrow = corr_matrix.iloc[0].abs()
-cols_to_drop = heatmap_firstrow[heatmap_firstrow < 0.2].index
-predictors_revenue = predictors_revenue.drop(cols_to_drop, axis=1)
+corr_matrix_revenue = predictors_revenue.corr()
+heatmap_firstrow_revenue = corr_matrix_revenue.iloc[0].abs()
+cols_to_drop_revenue = heatmap_firstrow_revenue[heatmap_firstrow_revenue < 0.2].index
+predictors_revenue = predictors_revenue.drop(cols_to_drop_revenue, axis=1)
 predictors_revenue = predictors_revenue.drop('Rank', axis=1)
 #predictors_revenue = predictors_revenue.drop('Rating', axis=1) #To fix overfitting
-#predictors = predictors.drop('Runtime (Minutes)', axis=1) #No removing this
-#predictors = predictors.drop('Drama', axis=1) #To fix overfitting
-#predictors = predictors.drop('Votes', axis=1) #To fix overfitting
+#predictors_revenue = predictors_revenue.drop('Runtime (Minutes)', axis=1) #No removing this
+#predictors_revenue = predictors_revenue.drop('Drama', axis=1) #To fix overfitting
+#predictors_revenue = predictors_revenue.drop('Votes', axis=1) #To fix overfitting
 
-heatmap = sns.heatmap(predictors_revenue.corr(), vmin=-1, vmax=1, annot=True)
-heatmap.set_title("Predictors Correlation Heatmap", fontdict={"fontsize": 12}, pad=12);
+heatmap_revenue = sns.heatmap(predictors_revenue.corr(), vmin=-1, vmax=1, annot=True)
+heatmap_revenue.set_title("Predictors Correlation Heatmap", fontdict={"fontsize": 12}, pad=12);
 #plt.show()
 
 # Split the data into independant variables and dependant variable
-independant_variables = predictors_revenue.drop('Revenue (Millions)', axis=1)
-dependant_variable = predictors_revenue['Revenue (Millions)']
+independant_variables_revenue = predictors_revenue.drop('Revenue (Millions)', axis=1)
+dependant_variable_revenue = predictors_revenue['Revenue (Millions)']
 
 # Split the data into training and test sets
-independant_train, independant_test, dependant_train, dependant_test = train_test_split(independant_variables, dependant_variable, test_size=0.2)
+independant_train_revenue, independant_test_revenue, dependant_train_revenue, dependant_test_revenue = train_test_split(independant_variables_revenue, dependant_variable_revenue, test_size=0.2)
 
-randomForestModel = RandomForestRegressor()
-randomForestModel.fit(independant_train, dependant_train)
+randomForestModel_revenue = RandomForestRegressor()
+randomForestModel_revenue.fit(independant_train_revenue, dependant_train_revenue)
 
-predict_dependant_train = randomForestModel.predict(independant_train)
-predict_dependant_test = randomForestModel.predict(independant_test)
+predict_dependant_train_revenue = randomForestModel_revenue.predict(independant_train_revenue)
+predict_dependant_test_revenue = randomForestModel_revenue.predict(independant_test_revenue)
 
-mean_squared_error = mean_squared_error(dependant_test, predict_dependant_test)
-r_squared_train = r2_score(dependant_train, predict_dependant_train)
-r_squared_test = r2_score(dependant_test, predict_dependant_test)
-adj_r_squared_train = 1 - ((1 - r_squared_train) * (838 - 1) / (838 - len(independant_variables.columns) - 1))
-adj_r_squared_test = 1 - ((1 - r_squared_test) * (838 - 1) / (838 - len(independant_variables.columns) - 1))
+mean_squared_error_revenue = mean_squared_error(dependant_test_revenue, predict_dependant_test_revenue)
+r_squared_train_revenue = r2_score(dependant_train_revenue, predict_dependant_train_revenue)
+r_squared_test_revenue = r2_score(dependant_test_revenue, predict_dependant_test_revenue)
+adj_r_squared_train_revenue = 1 - ((1 - r_squared_train_revenue) * (838 - 1) / (838 - len(independant_variables_revenue.columns) - 1))
+adj_r_squared_test_revenue = 1 - ((1 - r_squared_test_revenue) * (838 - 1) / (838 - len(independant_variables_revenue.columns) - 1))
 
-print("Root Mean Squared Error: ", sqrt(mean_squared_error))
-print("Train Adjusted R Squared", adj_r_squared_train)
-print("Test Adjusted R Squared", adj_r_squared_test)
+print("Root Mean Squared Error: ", sqrt(mean_squared_error_revenue))
+print("Train Adjusted R Squared", adj_r_squared_train_revenue)
+print("Test Adjusted R Squared", adj_r_squared_test_revenue)
 
 #RESIDUAL PLOT
-residuals = dependant_test - predict_dependant_test
+residuals_revenue = dependant_test_revenue - predict_dependant_test_revenue
 
 # Scatter plot of the residuals against the predicted values
-plt.scatter(predict_dependant_test, residuals)
+plt.scatter(predict_dependant_test_revenue, residuals_revenue)
 plt.axhline(y=0, color='r', linestyle='-')
 plt.title('Residual plot')
 plt.xlabel('Predicted values')
