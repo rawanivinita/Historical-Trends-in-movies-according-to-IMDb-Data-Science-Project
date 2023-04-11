@@ -80,19 +80,19 @@ plt.plot(runtime_column_revenue, y_fit_revenue, color='red')
 
 # print the correlation
 corr_rev_run = df_movie_revenue['Runtime (Minutes)'].corr(df_movie_revenue['Revenue (Millions)'])
-print("Correlation between Runtime and Revenue is: ", round(corr_rev_run, 2))
+#print("Correlation between Runtime and Revenue is: ", round(corr_rev_run, 2))
 
 corr_rev_run = df_movie_revenue['Year'].corr(df_movie_revenue['Revenue (Millions)'])
-print("Correlation between year and Revenue is: ", round(corr_rev_run, 2))
+#print("Correlation between year and Revenue is: ", round(corr_rev_run, 2))
 
 corr_rev_run = df_movie_revenue['Rating'].corr(df_movie_revenue['Revenue (Millions)'])
-print("Correlation between Rating and Revenue is: ", round(corr_rev_run, 2))
+#print("Correlation between Rating and Revenue is: ", round(corr_rev_run, 2))
 
 corr_rev_run = df_movie_revenue['Votes'].corr(df_movie_revenue['Revenue (Millions)'])
-print("Correlation between Votes and Revenue is: ", round(corr_rev_run, 2))
+#print("Correlation between Votes and Revenue is: ", round(corr_rev_run, 2))
 
 corr_rev_run = df_movie_revenue['Metascore'].corr(df_movie_revenue['Revenue (Millions)'])
-print("Correlation between Metascore and Revenue is: ", round(corr_rev_run, 2))
+#print("Correlation between Metascore and Revenue is: ", round(corr_rev_run, 2))
 
 # -------------------Correlation HeatMaps for Categorical variables---------------------------------------------------
 # Created columns for each unique element of Categorical variable by converting categorical values to numeric values
@@ -206,7 +206,7 @@ heatmap_firstrow_revenue = corr_matrix_revenue.iloc[0].abs()
 cols_to_drop_revenue = heatmap_firstrow_revenue[heatmap_firstrow_revenue < 0.2].index
 predictors_revenue = predictors_revenue.drop(cols_to_drop_revenue, axis=1)
 predictors_revenue = predictors_revenue.drop('Rank', axis=1)
-#predictors_revenue = predictors_revenue.drop('Runtime (Minutes)', axis=1) #To fix overfitting
+predictors_revenue = predictors_revenue.drop('Runtime (Minutes)', axis=1) #To fix overfitting
 
 heatmap_revenue = sns.heatmap(predictors_revenue.corr(), vmin=-1, vmax=1, annot=True)
 heatmap_revenue.set_title("Predictors Correlation Heatmap", fontdict={"fontsize": 12}, pad=12);
@@ -233,11 +233,11 @@ r_squared_test_revenue = r2_score(dependant_test_revenue, predict_dependant_test
 adj_r_squared_train_revenue = 1 - ((1 - r_squared_train_revenue) * (838 - 1) / (838 - len(independant_variables_revenue.columns) - 1))
 adj_r_squared_test_revenue = 1 - ((1 - r_squared_test_revenue) * (838 - 1) / (838 - len(independant_variables_revenue.columns) - 1))
 
-
+print("Mean Squared Error: ", mean_squared_error_revenue)
 print("Root Mean Squared Error: ", sqrt(mean_squared_error_revenue))
 print("Train Adjusted R Squared", adj_r_squared_train_revenue)
 print("Test Adjusted R Squared", adj_r_squared_test_revenue)
-print(independant_variables_revenue)
+
 
 #RESIDUAL PLOT
 residuals_revenue = dependant_test_revenue - predict_dependant_test_revenue
