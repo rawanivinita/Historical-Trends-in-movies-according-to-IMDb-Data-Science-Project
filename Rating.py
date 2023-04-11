@@ -117,9 +117,9 @@ df_movie_genre_rating = pd.concat([df_movie['Rating'], genres, df_movie['Rank']]
 
 # Dropped columns with negligible correlation (<0.1) in the Genre vs Rating correlation heatmap
 
-corr_matrix = df_movie_genre_rating.corr()
-heatmap_firstrow = corr_matrix.iloc[0].abs()
-cols_to_drop = heatmap_firstrow[heatmap_firstrow < 0.1].index
+corr_matrix_genre_rating = df_movie_genre_rating.corr()
+heatmap_firstrow_genre_rating = corr_matrix_genre_rating.iloc[0].abs()
+cols_to_drop = heatmap_firstrow_genre_rating[heatmap_firstrow_genre_rating < 0.1].index
 df_movie_genre_rating = df_movie_genre_rating.drop(cols_to_drop, axis=1)
 
 # Display Rating vs Genre HeatMap
@@ -146,9 +146,9 @@ for director in top_20_directors['Director']:
 # Dropped columns with negligible correlation (<0.1) in the Rating vs Director correlation heatmap
 df_movie_directors_rating = df_movie_directors_rating.drop('Director', axis=1)
 
-corr_matrix = df_movie_directors_rating.corr()
-heatmap_firstrow = corr_matrix.iloc[0].abs()
-cols_to_drop = heatmap_firstrow[heatmap_firstrow < 0.1].index
+corr_matrix_directors_rating = df_movie_directors_rating.corr()
+heatmap_firstrow_directors_rating = corr_matrix_directors_rating.iloc[0].abs()
+cols_to_drop = heatmap_firstrow_directors_rating[heatmap_firstrow_directors_rating < 0.1].index
 df_movie_directors_rating = df_movie_directors_rating.drop(cols_to_drop, axis=1)
 
 #corr_matrix_rating_director = df_movie_directors.corr()
@@ -188,9 +188,9 @@ for actor in top_20_actors:
 df_movie_actor_rating = df_movie_actor_rating.drop('Actors', axis=1)
 
 # Dropped columns with negligible correlation (<0.1) in the Revenue vs Actors correlation heatmap
-corr_matrix = df_movie_actor_rating.corr()
-heatmap_firstrow = corr_matrix.iloc[0].abs()
-cols_to_drop = heatmap_firstrow[heatmap_firstrow < 0.1].index
+corr_matrix_actor_rating = df_movie_actor_rating.corr()
+heatmap_firstrow_actor_rating = corr_matrix_actor_rating.iloc[0].abs()
+cols_to_drop = heatmap_firstrow_actor_rating[heatmap_firstrow_actor_rating < 0.1].index
 df_movie_actor_rating = df_movie_actor_rating.drop(cols_to_drop, axis=1)
 
 # Display Revenue vs Actor HeatMap
@@ -205,9 +205,9 @@ predictors_rating = pd.merge(df_movie_genre_rating, df_movie_actor_rating)
 predictors_rating = pd.merge(predictors_rating, df_movie_directors_rating)
 
 # Dropped columns with weak correlation (<0.2)
-corr_matrix = predictors_rating.corr()
-heatmap_firstrow = corr_matrix.iloc[0].abs()
-cols_to_drop = heatmap_firstrow[heatmap_firstrow < 0.2].index
+corr_matrix_rating = predictors_rating.corr()
+heatmap_firstrow_rating = corr_matrix_rating.iloc[0].abs()
+cols_to_drop = heatmap_firstrow_rating[heatmap_firstrow_rating < 0.2].index
 predictors_rating = predictors_rating.drop(cols_to_drop, axis=1)
 predictors_rating = predictors_rating.drop('Rank', axis=1)
 predictors_rating = predictors_rating.drop('Votes', axis=1) #To reduce overfitting
@@ -215,33 +215,33 @@ predictors_rating = predictors_rating.drop('Votes', axis=1) #To reduce overfitti
 print(predictors_rating.columns)
 
 # Split the data into independant variables and dependant variable
-independant_variables = predictors_rating.drop('Rating', axis=1)
-dependant_variable = predictors_rating['Rating']
+independant_variables_rating = predictors_rating.drop('Rating', axis=1)
+dependant_variable_rating = predictors_rating['Rating']
 
 # Split the data into training and test sets
-independant_train, independant_test, dependant_train, dependant_test = train_test_split(independant_variables, dependant_variable, test_size=0.2)
+independant_train_rating, independant_test_rating, dependant_train_rating, dependant_test_rating = train_test_split(independant_variables_rating, dependant_variable_rating, test_size=0.2)
 
 randomForestModel = RandomForestRegressor()
-randomForestModel.fit(independant_train, dependant_train)
+randomForestModel.fit(independant_train_rating, dependant_train_rating)
 
-predict_dependant_train = randomForestModel.predict(independant_train)
-predict_dependant_test = randomForestModel.predict(independant_test)
+predict_dependant_train_rating = randomForestModel.predict(independant_train_rating)
+predict_dependant_test_rating = randomForestModel.predict(independant_test_rating)
 
-mean_squared_error = mean_squared_error(dependant_test, predict_dependant_test)
-r_squared_train = r2_score(dependant_train, predict_dependant_train)
-r_squared_test = r2_score(dependant_test, predict_dependant_test)
-adj_r_squared_train = 1 - ((1 - r_squared_train) * (838 - 1) / (838 - 7 - 1))
-adj_r_squared_test = 1 - ((1 - r_squared_test) * (838 - 1) / (838 - 7 - 1))
+mean_squared_error_rating = mean_squared_error(dependant_test_rating, predict_dependant_test_rating)
+r_squared_train_rating = r2_score(dependant_train_rating, predict_dependant_train_rating)
+r_squared_test_rating = r2_score(dependant_test_rating, predict_dependant_test_rating)
+adj_r_squared_train_rating = 1 - ((1 - r_squared_train_rating) * (838 - 1) / (838 - len(independant_variables_rating.columns) - 1))
+adj_r_squared_test_rating = 1 - ((1 - r_squared_test_rating) * (838 - 1) / (838 - len(independant_variables_rating.columns) - 1))
 
-print("Root Mean Squared Error: ", sqrt(mean_squared_error))
-print("Train Adjusted R Squared", adj_r_squared_train)
-print("Test Adjusted R Squared", adj_r_squared_test)
+print("Root Mean Squared Error: ", sqrt(mean_squared_error_rating))
+print("Train Adjusted R Squared", adj_r_squared_train_rating)
+print("Test Adjusted R Squared", adj_r_squared_test_rating)
 
 #RESIDUAL PLOT
-residuals = dependant_test - predict_dependant_test
+residuals_rating = dependant_test_rating - predict_dependant_test_rating
 
 # Scatter plot of the residuals against the predicted values
-plt.scatter(predict_dependant_test, residuals)
+plt.scatter(predict_dependant_test_rating, residuals_rating)
 plt.axhline(y=0, color='r', linestyle='-')
 plt.title('Residual plot')
 plt.xlabel('Predicted values')
